@@ -154,7 +154,7 @@ example_calling_with_dataframes(
 
 ## Final output files
 
-| File |                                       | Description |
+| File | Description |
 
 | `background_removed_data.csv` | CH4 data with background subtracted |
 | `event_detection.csv`         | Event numbers and timestamps |
