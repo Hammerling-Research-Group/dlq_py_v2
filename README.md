@@ -1,7 +1,9 @@
 # dlq_py_v2
 Restructured DLQ code in Python
 
-**This is working code, which is changing daily. For users interested in a stable, older version of the DLQ in Python, please see the legacy version [here](https://github.com/Hammerling-Research-Group/dlq_py)**.
+> ⚠️ **Warning**
+> 
+> **This is working code, which is changing daily. For users interested in a stable, older version of the DLQ in Python, please see the legacy version [here](https://github.com/Hammerling-Research-Group/dlq_py).**
 
 This repository contains the latest two-step Python-based approach to the detection, localization, and quantification (DLQ) algorithm for methane emission events using sensor observations and dispersion model outputs. It contains functions and steps to identify emission spikes, localize to the likely source, and then quantify the emission rate. For more details on the method, see [here](https://doi.org/10.1525/elementa.2023.00110).
 
