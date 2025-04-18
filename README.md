@@ -154,10 +154,8 @@ example_calling_with_dataframes(
 
 ## Final output files
 
-| File | Description |
-
-| `background_removed_data.csv` | CH4 data with background subtracted |
-| `event_detection.csv`         | Event numbers and timestamps |
-| `alignment_metrics.csv`       | Correlation between simulated and observed CH4 |
-| `event_details.csv`           | Estimated source and emission rates for each event, with start and end date, time |
-| `final_results.csv/.pkl`      | Combined results with event metadata |
+`background_removed_data.csv`: CH4 data with background subtracted
+`event_detection.csv`: Event numbers and timestamps
+`alignment_metrics.csv`: Correlation between simulated and observed CH4
+`event_details.csv`: Estimated source and emission rates for each event, with start and end date, time
+`final_results.csv/.pkl`: Combined results with event metadata
