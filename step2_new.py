@@ -15,6 +15,7 @@ import json
 import argparse
 import pickle
 from typing import List, Dict, Union, Optional, Tuple, Any
+from helper_DLQ import find_spikes, remove_background, detect_events, estimate_rate
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -447,7 +448,7 @@ def compute_alignment_and_quantification(
             all_obs_to_compare_all_events.extend(all_obs_to_compare)
 
             # Use binary search instead of grid search
-            rate_est, error_lower, error_upper = estimate_rate_with_binary_search(
+            rate_est, error_lower, error_upper = estimate_rate(
                 all_preds_to_compare,
                 all_obs_to_compare,
                 n_samples=1000
