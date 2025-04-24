@@ -84,6 +84,9 @@ Step 2 uses the outputs from *Step 1* and observed CH4 data. *Note*: the user ca
   - `final_results.csv`
   - `final_results.pkl`
 
+The module dependencies are included in: 
+  - `helper_DLQ.py`: This has all the neccessary functions needed for step 2
+
 Some additional notes re: *Step 2*:
   - Accepts file paths or in-memory data (DataFrames, dicts, or lists)
   - Converts formats automatically for:
@@ -103,10 +106,16 @@ Some additional notes re: *Step 2*:
 
 ```
 {
-  "gap_time": 30,
-  "length_threshold": 15,
-  "do_event_detection": true,
-  "output_dir": "./output/"
+        'gap_time': 30,  # Time gap (in minutes) for event detection(  Distinct events that are separated by gap.time minutes or less will be combined into one event.)
+        'length_threshold': 15, #Events shorter than or equal to length.threshold minutes will be discarded.
+        'do_event_detection':True,  # Toggle between normal event detection and 30min mode (True - Normal, False - 30min )
+        'output_dir': "./output/",  # Base directory for output files
+        'going_up_threshold': 0.25, # Minimum increase between consecutive points to start a potential spike
+        'return_threshold': 5, # Threshold as percentage of current maximum to determine end of spike
+        'amp_threshold': 1, #  Minimum amplitude required for a valid spike
+        'cont_diff_threshold': 0.25, #  Maximum difference between consecutive points to consider a plateau
+        'cont_diff_num': 10, # Number of consecutive small differences to identify a plateau
+        'n_samples': 1000 
 }
 ```
 
