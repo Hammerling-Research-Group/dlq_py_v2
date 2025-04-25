@@ -9,8 +9,8 @@ from typing import List, Dict, Union, Optional, Tuple, Any
 import matplotlib.pyplot as plt
 
 
-def find_spikes(times, obs, going_up_threshold=None, return_threshold=None, amp_threshold=None,
-                cont_diff_threshold=None, cont_diff_num=None, make_plot=None):
+def find_spikes(times, obs, going_up_threshold=0.25, return_threshold=5, amp_threshold=1,
+                cont_diff_threshold=0.25, cont_diff_num=10, make_plot=False):
     """
     Detects spikes in time series data based on various thresholds and criteria.
 
@@ -40,14 +40,6 @@ def find_spikes(times, obs, going_up_threshold=None, return_threshold=None, amp_
         - NaN values indicate no event
         - Integer values indicate spike IDs (grouped observations in same spike)
     """
-    # Set default values if None is provided
-    going_up_threshold = 0.25 if going_up_threshold is None else going_up_threshold
-    return_threshold = 5 if return_threshold is None else return_threshold
-    amp_threshold = 1 if amp_threshold is None else amp_threshold
-    cont_diff_threshold = 0.25 if cont_diff_threshold is None else cont_diff_threshold
-    cont_diff_num = 10 if cont_diff_num is None else cont_diff_num
-    make_plot = False if make_plot is None else make_plot
-
     # Convert obs to numpy array if it's a pandas Series
     if isinstance(obs, pd.Series):
         obs = obs.to_numpy()
@@ -157,7 +149,7 @@ def find_spikes(times, obs, going_up_threshold=None, return_threshold=None, amp_
     return filtered_events
 
 
-def remove_background(obs, times, gap_time=None, amp_threshold=None):
+def remove_background(obs, times, gap_time=5, amp_threshold=0.75):
     """
     Removes background signal from time series data by identifying and
     preserving only the spike events.
@@ -180,10 +172,6 @@ def remove_background(obs, times, gap_time=None, amp_threshold=None):
         Non-spike observations are set to zero, and spike observations have
         their estimated background level subtracted
     """
-    # Set default values if None is provided
-    gap_time = 5 if gap_time is None else gap_time
-    amp_threshold = 0.75 if amp_threshold is None else amp_threshold
-
     # Ensure times is a datetime index or series
     if not isinstance(times, (pd.DatetimeIndex, pd.Series)):
         times = pd.to_datetime(times)
@@ -279,7 +267,7 @@ def remove_background(obs, times, gap_time=None, amp_threshold=None):
     return obs
 
 
-def detect_events(obs, times, gap_time=None, length_threshold=None, do_event_detection=None):
+def detect_events(obs, times, gap_time=30, length_threshold=15, do_event_detection=True):
     """
     Detect emission events using either event detection mode or 30-minute mode
 
@@ -303,11 +291,6 @@ def detect_events(obs, times, gap_time=None, length_threshold=None, do_event_det
         - DataFrame with time values and event IDs
         - Series with maximum concentration across all sensors at each time point
     """
-    # Set default values if None is provided
-    gap_time = 30 if gap_time is None else gap_time
-    length_threshold = 15 if length_threshold is None else length_threshold
-    do_event_detection = True if do_event_detection is None else do_event_detection
-
     # Compute maximum concentration across sensors
     max_obs = obs.max(axis=1)
 
@@ -392,7 +375,7 @@ def detect_events(obs, times, gap_time=None, length_threshold=None, do_event_det
     return spikes, max_obs
 
 
-def estimate_rate_with_binary_search(all_preds_to_compare, all_obs_to_compare, n_samples=None):
+def estimate_rate(all_preds_to_compare, all_obs_to_compare, n_samples=1000):
     """
     Estimates emission rate using binary search algorithm with bootstrap sampling.
     This is more efficient than grid search for finding optimal scaling factor.
@@ -414,15 +397,13 @@ def estimate_rate_with_binary_search(all_preds_to_compare, all_obs_to_compare, n
         - Upper bound (95th percentile) in kg/hr
         Returns (np.nan, np.nan, np.nan) if estimation fails
     """
-    # Set default value if None is provided
-    n_samples = 1000 if n_samples is None else n_samples
 
     q_vals = []
 
     # Define reasonable bounds for the search
     # Using wider bounds than the original grid to ensure we don't miss any values
     min_q = 0.00001  # Lower than original 0.0001
-    max_q = 5000  # Higher than original 3000
+    max_q = 10000  # Higher than original 3000
 
     for _ in range(n_samples):
         # Bootstrap sampling
